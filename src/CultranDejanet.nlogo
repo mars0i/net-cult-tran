@@ -1,13 +1,13 @@
-; CultranDejonet.nlogo
-; Marshall Abrams' based partly on the following models from the built-in NetLogo models library:
+; CultranDejanet.nlogo
+; Marshall Abrams' model based partly on the following models from the built-in NetLogo models library:
 ;
 ; Stonedahl, F. and Wilensky, U. (2008). NetLogo Virus on a Network model. http://ccl.northwestern.edu/netlogo/models/VirusonaNetwork. Center for Connected Learning and Computer-Based Modeling, Northwestern Institute on Complex Systems, Northwestern University, Evanston, IL.
 ; Wilensky, U. (2005). NetLogo Preferential Attachment model. http://ccl.northwestern.edu/netlogo/models/PreferentialAttachment. Center for Connected Learning and Computer-Based Modeling, Northwestern University, Evanston, IL.
 ; Wilensky, U. (2005). NetLogo Small Worlds model. http://ccl.northwestern.edu/netlogo/models/SmallWorlds. Center for Connected Learning and Computer-Based Modeling, Northwestern University, Evanston, IL.
-
+; Code not directly dependent on the above is released under the GNU Public License v 3.0 by Marshall Abrams.
 
 ; Globals set by user:
-;   nodes-per-subnet
+;   num-nodes
 ;   average-node-degree  ; avg links per node
 ;   trust-mean           ; mean activation passed to receiver
 ;   trust-stdev          ; standard deviation of normal distribution around mean
@@ -114,7 +114,7 @@ to setup
 end
 
 to create-nodes [subnet]
-  create-persons nodes-per-subnet
+  create-persons num-nodes
   [
     ; for visual reasons, we don't put any nodes *too* close to the edges
     setxy (random-xcor * 0.95) (random-ycor * 0.95)
@@ -137,7 +137,7 @@ end
 ; (Note that these locations will be revised by initial-layout-network.  Their only function is to group persons
 ; randomly--in effect to randomly order persons by closeness to any given person.)
 to create-network [subnet]
-  let num-links (average-node-degree * nodes-per-subnet) / 2
+  let num-links (average-node-degree * num-nodes) / 2
   while [count links with [link-subnet = subnet] < num-links ][
     ask one-of persons with [person-subnet = subnet] [
       let choice (min-one-of (other persons with [person-subnet = subnet and not link-neighbor? myself]) [distance myself])
@@ -152,7 +152,7 @@ end
 ;    let nodes1 persons with [person-subnet = subn1] 
 ;    let nodes2 persons with [person-subnet = subn2]
 ;    if (any? nodes1 and any? nodes2) [
-;      link-close-nodes inter-nodes-per-subnet nodes1 nodes2
+;      link-close-nodes inter-num-nodes nodes1 nodes2
 ;    ]
 ;  ]
 ;end
@@ -179,7 +179,7 @@ end
 to initial-layout-network [nodes]
   repeat 10 [
     layout-spring nodes links 
-                  0.1 (world-width / sqrt nodes-per-subnet) 1 ; 3rd arg was 0.3 originally
+                  0.1 (world-width / sqrt num-nodes) 1 ; 3rd arg was 0.3 originally
   ]
 end
 
@@ -708,10 +708,10 @@ NIL
 SLIDER
 0
 79
-170
+172
 112
-nodes-per-subnet
-nodes-per-subnet
+num-nodes
+num-nodes
 4
 1000
 225
@@ -728,7 +728,7 @@ SLIDER
 average-node-degree
 average-node-degree
 1
-min (list 500 (nodes-per-subnet - 1))
+min (list 500 (num-nodes - 1))
 15
 1
 1
@@ -1427,7 +1427,7 @@ Polygon -7500403 true true 270 75 225 30 30 225 75 270
 Polygon -7500403 true true 30 75 75 30 270 225 225 270
 
 @#$#@#$#@
-NetLogo 5.0.4
+NetLogo 5.1.0
 @#$#@#$#@
 @#$#@#$#@
 @#$#@#$#@
