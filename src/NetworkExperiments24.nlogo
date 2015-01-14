@@ -998,7 +998,7 @@ nodes-per-subnet
 nodes-per-subnet
 4
 1000
-300
+200
 1
 1
 NIL
@@ -1013,7 +1013,7 @@ average-node-degree
 average-node-degree
 1
 min (list 500 (nodes-per-subnet - 1))
-15
+12
 1
 1
 NIL
@@ -1165,7 +1165,7 @@ number-of-subnets
 number-of-subnets
 1
 20
-1
+2
 1
 1
 NIL
@@ -1204,7 +1204,7 @@ CHOOSER
 subnet2
 subnet2
 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20
-3
+1
 
 BUTTON
 0
@@ -1409,7 +1409,7 @@ SWITCH
 493
 morris-symmetric?
 morris-symmetric?
-0
+1
 1
 -1000
 
@@ -1614,7 +1614,7 @@ SWITCH
 238
 make-pundit
 make-pundit
-1
+0
 1
 -1000
 
@@ -1659,10 +1659,22 @@ confidence-bound
 NIL
 HORIZONTAL
 
+TEXTBOX
+135
+210
+210
+240
+Reqs subnets >= 2
+11
+0.0
+1
+
 @#$#@#$#@
 ## WHAT IS IT?
 
 This is a model of spread of conflicting beliefs or other cultural variants on a network.  It allows experimenting with the effect of different network structures and transmission biases on the distribution of beliefs. 
+
+**These notes are incomplete.**
 
 ## HOW IT WORKS
 
