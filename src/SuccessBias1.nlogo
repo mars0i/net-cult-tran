@@ -349,6 +349,15 @@ to toggle-who-display
   ]
 end
 
+to make-activns-extreme
+  ask persons
+    [if-else activation >= 0
+       [set activation 1
+        set next-activation 1]
+       [set activation -1
+        set next-activation -1]
+     set color (activn-to-color activation)]
+end
  
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; RUN
@@ -453,20 +462,10 @@ end
 ;; includes both setup and run functions
 ;; uses other code here
 
-to morris-setup
-  setup
-  make-activns-extreme
-end
-
-to make-activns-extreme
-  ask persons
-    [if-else activation >= 0
-       [set activation 1
-        set next-activation 1]
-       [set activation -1
-        set next-activation -1]
-     set color (activn-to-color activation)]
-end
+;to morris-setup
+;  setup
+;  make-activns-extreme
+;end
 
 to morris-go
   if (ready-to-stop) [
@@ -931,9 +930,9 @@ ticks
 30.0
 
 BUTTON
-0
+5
 10
-95
+100
 43
 set up network
 setup
@@ -985,9 +984,9 @@ PENS
 "pop" 1.0 0 -8053223 true "" "plot (mean [activation] of persons)"
 
 SLIDER
-0
+5
 105
-170
+175
 138
 nodes-per-subnet
 nodes-per-subnet
@@ -1000,9 +999,9 @@ NIL
 HORIZONTAL
 
 SLIDER
-0
+5
 140
-170
+175
 173
 average-node-degree
 average-node-degree
@@ -1032,9 +1031,9 @@ NIL
 1
 
 BUTTON
-95
+100
 10
-185
+190
 43
 NIL
 reset-cultvars
@@ -1152,9 +1151,9 @@ PENS
 "default" 1.0 1 -16777216 true "let max-degree max [count link-neighbors] of persons\nplot-pen-reset  ;; erase what we plotted before\nset-plot-x-range 1 (max-degree + 1)  ;; + 1 to make room for the width of the last bar\nhistogram [count link-neighbors] of persons" "let max-degree max [count link-neighbors] of persons\nplot-pen-reset  ;; erase what we plotted before\nset-plot-x-range 1 (max-degree + 1)  ;; + 1 to make room for the width of the last bar\nhistogram [count link-neighbors] of persons"
 
 SLIDER
-0
+5
 173
-170
+175
 206
 number-of-subnets
 number-of-subnets
@@ -1167,9 +1166,9 @@ NIL
 HORIZONTAL
 
 SLIDER
-0
+5
 290
-170
+175
 323
 inter-nodes-per-subnet
 inter-nodes-per-subnet
@@ -1182,9 +1181,9 @@ NIL
 HORIZONTAL
 
 CHOOSER
-0
+5
 245
-93
+98
 290
 subnet1
 subnet1
@@ -1192,9 +1191,9 @@ subnet1
 0
 
 CHOOSER
-93
+98
 245
-185
+190
 290
 subnet2
 subnet2
@@ -1202,9 +1201,9 @@ subnet2
 1
 
 BUTTON
-0
+5
 326
-55
+60
 359
 link-em
 inter-link-subnets subnet1 subnet2\n; subnet1 and subnet2 are globals defined\n; by gui elements.
@@ -1244,9 +1243,9 @@ Iteration stops if max activn change is < 10 ^ stop-threshold-exponent.  Less ne
 1
 
 BUTTON
-65
+70
 560
-130
+135
 593
 degrees
 toggle-degree-display
@@ -1279,8 +1278,8 @@ morris-switch-threshold
 morris-switch-threshold
 0
 .5
-0.35
-.025
+0.4
+.01
 1
 NIL
 HORIZONTAL
@@ -1330,9 +1329,9 @@ Morris-style transmission:
 1
 
 BUTTON
-0
+5
 45
-85
+90
 78
 extremize
 make-activns-extreme
@@ -1347,9 +1346,9 @@ NIL
 1
 
 BUTTON
-55
+60
 325
-164
+169
 359
 NIL
 link-near-subnets
@@ -1375,9 +1374,9 @@ morris-symmetric?
 -1000
 
 BUTTON
-0
+5
 595
-167
+172
 628
 reset colors to activns
 reset-colors
@@ -1392,9 +1391,9 @@ NIL
 1
 
 SLIDER
-55
+60
 465
-185
+190
 498
 n1-proportion
 n1-proportion
@@ -1407,9 +1406,9 @@ NIL
 HORIZONTAL
 
 BUTTON
-0
+5
 560
-65
+70
 593
 node #
 toggle-who-display
@@ -1424,9 +1423,9 @@ NIL
 1
 
 BUTTON
-0
+5
 465
-55
+60
 498
 partition
 show-node-sets make-network-partition persons
@@ -1441,9 +1440,9 @@ NIL
 1
 
 BUTTON
-0
+5
 385
-140
+145
 418
 modularity communities
 find-and-store-communities\nshow-communities
@@ -1458,9 +1457,9 @@ NIL
 1
 
 BUTTON
-115
+120
 420
-170
+175
 453
 recolor
 show-communities
@@ -1475,9 +1474,9 @@ NIL
 1
 
 BUTTON
-130
+135
 560
-195
+200
 593
 cohesion
 toggle-cohesion-display
@@ -1492,9 +1491,9 @@ NIL
 1
 
 TEXTBOX
-5
+10
 85
-105
+110
 103
 network structure:
 11
@@ -1502,9 +1501,9 @@ network structure:
 1
 
 TEXTBOX
-5
+10
 365
-130
+135
 383
 community detection:
 11
@@ -1512,9 +1511,9 @@ community detection:
 1
 
 TEXTBOX
-5
+10
 545
-150
+155
 563
 toggle numeric node info:
 11
@@ -1542,9 +1541,9 @@ popco style:
 1
 
 BUTTON
-0
+5
 420
-115
+120
 453
 reset-communites
 reset-communities\nreset-colors
@@ -1559,9 +1558,9 @@ NIL
 1
 
 SWITCH
-0
+5
 205
-132
+137
 238
 make-pundit
 make-pundit
@@ -1589,7 +1588,7 @@ weight-on-senders-activn
 weight-on-senders-activn
 0
 1
-0.05
+0
 .05
 1
 NIL
@@ -1611,9 +1610,9 @@ NIL
 HORIZONTAL
 
 TEXTBOX
-135
+140
 210
-210
+215
 240
 Reqs subnets >= 2
 11
@@ -1639,7 +1638,7 @@ global-tran-prob
 global-tran-prob
 0
 1
-0.03
+0
 0.01
 1
 NIL
@@ -1658,31 +1657,131 @@ Also transmit to random this prob of others if > 0
 @#$#@#$#@
 ## WHAT IS IT?
 
-This is a model of spread of conflicting beliefs or other cultural variants on a network.  It allows experimenting with the effect of different network structures and transmission biases on the distribution of beliefs. 
+This is a model of spread of conflicting beliefs or other cultural variants on a network.  It allows experimenting with the effect of different network structures and transmission methods on the distribution of beliefs.
 
 **These notes are incomplete.**
 
-## HOW IT WORKS
+## HOW IT WORKS - OVERVIEW
 
-Each person (node) has a degree of confidence.  1 indicates full confidence in the "black" proposition.  -1 indicates full confidence in its negation.  Degrees of confidence are not transmitted.  Instead, the degree of confidence (activation) determines the probability that a belief will be communicated.
-
-On each tick, for each link attached to a person, the person randomly decides to "utter" the proposition to its (undirected) network neighbors, with probability equal to the absolute value of the degree of confidence plus prob-of-transmission-bias.  The value that's conveyed to the receiver of the utterance is trust-mean times the sign of the original degree of confidence, or a Normally distributed value with mean trust-mean and standard deviation trust-stdev, if trust-stdev is not zero.  The effect of this input to the receiver's degree of confidence depends on how far the latter is from -1 or 1.  See the definition of receive-utterance for details.
+Each person, or node, represented by a circle has a degree of confidence.  1 indicates full confidence in the "black" proposition.  -1 indicates full confidence in its negation, the "white" proposition.  Intermediate levels of confidence are represented by grays.  There are two kinds of transmission modeled, "popco" transmission (inspired by another program by the same author, POPCO), and "averaging transmission".  Which method is used depends on setting of the `averaging-transmission` switch.  Both methods can also be subject to a "bounded confidence" rule.  Each of these three aspects of the model are described below.
 
 You create multiple "subnetworks" which will be unconnected unless you create "inter-links" between them.  Inter-links are a different color than within-subnet links, but all links function identically.  Similarly, nodes connected to inter-links change shape, but this does not change their functioning.
 
 Each subnetwork is created randomly in order to make the total number of links such that the average node degree per node is that specified by the user.  However, the network-creation algorithm tries to link to nodes which are located near each other.  This means that the node chosen for linking is random, since locations are random.  However, the result is not an Erdos-Renyi binomial/Possion network, since pairs of nodes don't have equal probability of being linked: Closer nodes are overwhelmingly more likely to be linked.
 
-## HOW TO USE IT
+## HOW TO USE IT - OVERVIEW
 
-Most of the GUI controls should be easy to understand with a little bit of experimentation.  
+Most of the GUI controls should be easy to understand with a little bit of experimentation; details are given below.  If you're new to NetLogo, or just new to this NetLogo model, try clicking on "set up network".  After it finishes, click on "go".  You can stop the program before it decides to finish by clicking on "go" again.  Notice how the program behaves differently depending on whether the `averaging-transmission` is turned on or off.  Try changing the number of people in the network by dragging the `nodes-per-subnet` slider.  The `average-node-degree` slider changes the kind of structure the network has, adjusting how many links each person has.
 
-The inter-nodes and inter-links controls are used to add links between subnets which otherwise would be unconnected.  inter-nodes-per-subnet determines the number of nodes
-in subnet1 and subnet2 that will be connected to each other each time create-inter-links is pushed.  When the button is pushed, each of the "inter-nodes" from subnet1 is linked to each of the inter-nodes from subnet2.  (If you want to create singly linked inter-nodes instead, set inter-nodes-per-subnet to 1, and push the button as many times as needed.)
+The inter-nodes and inter-links controls are used to add links between subnets which otherwise would be unconnected.  inter-nodes-per-subnet determines the number of nodes in subnet1 and subnet2 that will be connected to each other each time create-inter-links is pushed.  When the button is pushed, each of the "inter-nodes" from subnet1 is linked to each of the inter-nodes from subnet2.  (If you want to create singly linked inter-nodes instead, set inter-nodes-per-subnet to 1, and push the button as many times as needed.) 
 
+## POPCO TRANSMISSION
+
+This section describes the behavior when `averaging-transmission` is set to off (false).  See below for the model's behavior when `averaging-transmission` is set to on (true).  
+
+Degrees of confidence are not transmitted.  Instead, the degree of confidence (activation) determines the probability that a belief will be communicated.  (After all, when people offer assertions to each other, they don't generally indicate their degree of confidence, even if there are ways to do that by choice of words and tone of voice.)
+
+On each tick, for each link attached to a person, the person randomly decides to "utter" the proposition to its (undirected) network neighbors, with probability equal to the absolute value of the degree of confidence plus `transmission-bias-prob`.  The value that's conveyed to the receiver of the utterance is `trust-mean` times the sign of the original degree of confidence, or a normally distributed value with mean `trust-mean` and standard deviation `trust-stdev`, if `trust-stdev` is not zero.  The effect of this input to the receiver's degree of confidence depends on how far the latter is from -1 or 1.
+
+If the activation increment (the value normally distributed around `trust-mean`) is positive, it will move receiver's activation in that direction; if negative, it will push in negative direction. However, the degree of push will be scaled by how far the current activation is from the extremum in the direction of push.  If the distance is large, the incoming activation will have a large effect. If the distance is small, then `incoming-activn`'s effect will be small, so that it's harder to get to the extremum. The underlying intuition is that if you already have a strong belief in a proposition, then when someone expresses agreement with you, it doesn't make much difference.  On the other hand, if you're undecided, then what people around tell you is more likely to make a big difference.  Also, if you have a strong belief that P, and someone disagrees with you, that can make a big difference in your opinion.  (However, for a common value of `trust-mean` such as .05, the effect is still small.) The method used to do the updating is similar to methods often used to update nodes in connectionist/neural networks (e.g. Holyoak & Thagard 1989).  This is clearly not Bayesian updating, by the way.
+
+## AVERAGING TRANSMISSION
+
+When `averaging-transmission` is set to on (true), the new activation that results from each communication event is a weighted average of the senders and the receiver's activations. A receiver node's new activation is then receiver's old `activation * (1 - sender-activn-weight) + (transmitter's activation * sender-activn-weight)`.  Whether an activation is communicated is still a random decision, using the procedure described in the popco transmission section.  For averaging tramsmission you may find it useful to adjust `stop-threshold-exponent` from the default value if you want the updating to stop on its own.
+
+## BOUNDED CONFIDENCE
+
+For both methods of transmission, if `confidence-bound` is set to something other than 2, then persons whose activations differ by more than this amount will not communicate.  This is a way to model the idea that people will often ignore opinions that differ too much from their own.    (In Hegselmann & Krause's (2002) models, confidence bounds > .8 give the same result in the end for averaging transmission, but that doesn't seem to be the case in this version of averaging transmission, perhaps because whether one person says something to its neighbor is stochastic here.)
+
+## MORRIS TRANSMISSION
+
+Transmission rule based on Morris, S. (2000) and Vega-Redondo (2007), chapter 5.  
+
+You may want to run the `extremize` button before running `morris-go`, although this isn't essential.
+
+`morris-go` is similar to the regular `go` button, but runs `morris-transmit-cultvars` instead of `transmit-cultvars`.  (It would be possible merge these routines.)
+
+By default (i.e. with `morris-symmetric?` = false), there is transmission only from positive activations to negative activations.  With `morris-symmetric?` = true, the procedure described below can be modified in obvious ways to describe transmission from negative activations to positive activations.
+
+For each node with negative (positive) activation, if the fraction of neighbors with the opposite sign is at least equal to `morris-switch-threshold`, then the current node switches to the opposite (extreme) activation.
+
+Morris transmission is usually not very interesting starting from a random assignment of activations.  It's better to run the regular `go` function until the pattern stabilizes
+on black and white neighborhoods.  Then run the `extremize` button.  Then run `morris-go`.  Depending on the value of `morris-switch-threshold`, you may see a shift
+in the boundaries of neighborhoods, or not.  if the threshold is low enough, one color
+may take over.
+
+## COHESION
+
+The `select-region` and `select-indivs` buttons let you select a set of persons on which to calculate Morris's measure of "cohesion" (Morris 2000) or "cohesiveness (Vega-Redondo 2007; Young 1998).  The monitor box labeled "cohesion" will display the cohesion of the selected set.  With the `select-region` button down, you can drag the mouse across nodes to select them.  Dragging the mouse a second time adds to the set of selected nodes.  With `select-indivs` down, instead, you can click on individual nodes to add or remove them to/from the set of selected nodes.  (Sometimes you have to click a few times to get this to work.)  The `deselect` button empties the set of selected nodes.
+
+Cohesion in Morris's sense is a measure of how well a set of nodes with similar opinions support each other's opinions in the face of disagreement from outside the set.  The cohesion of a set tells you how vulnerable to outside influence the most vulnerable member of the set is (0: very vulnerable, 1: not at all).  To compute cohesion, for each node in the set, we calculate the fraction of all of its links that connect to other nodes within the set.  Cohesion is the minimum of these fractions.  You can think of such fractions as fraction of neighbors who will help a node hold onto an opinion that is held within the group, if neighbors from outside the group disagree.  Morris's cohesion has a precise mathematical relationship to a form of transmission that isn't implemented in this model, although it's easy to implement.  Factors influencing whether a subnet has a stable common opinion in the fact of outside disagreement under popco transmission is not perfectly captured by cohesion.
+
+## PLOTS
+
+The first plot shows the frequency of persons with activations > 0 ("+"), the frequency for persons with activations < 0 ("-"), and the population mean and variance for activations activation.
+
+The second plot shows the distribution of degrees.  The degree of a node (person) its number of links.
 
 ## THINGS TO NOTICE
 
 The spread of black or white beliefs is influenced by how well connected different nodes are.  A set of nodes with many interconnections can reinforce similarity among its members, even in the face of a bias toward an alternative cultural variant.
+
+If a group of nodes has more connections to each other than to "outsiders", it can
+maintain an extreme view even if surrounded by those with the opposite view.  This property of a region of a network is related to Morris's concept of "cohesion" or "cohesiveness" (Morris 2000; Vega-Redondo 2007), Young's concept of "close-knittedness" (Young 1998), to other concepts of cohesion (Wasserman & Faust 1994), and other measures of community structure (Newman 2010).
+
+## THINGS TO TRY
+
+Start with average node degree in the range of 12 to 15.  Does one color take over the network? Once the network has stopped, or you have stopped it, try clicking `reset-cultvars`. The network will be preserved, but the nodes will be given a different set of random beliefs.  What happens this time?  What if you run it many times with the same network structure?
+
+Now try increasing the average node degree to 20, or 30.  Perform the same experiment. What happens?
+
+Go back to your original node degree and run the model until there is a stable pattern.  Now change `transmission-bias-prob`, making the black (1) or white (-1) cultural variant more likely to be transmitted.  What happens?  Is it possible to maintain cultural variation with a nonzero value for this parameter?
+
+Try altering `trust-mean` or `trust-stdev`.  What happens?  (You might think of high values of `trust-mean` as representing rumor during a crisis.)
+
+Turn on `averaging-transmission`.  How does the behavior differ?  How long does it take for the network to settle to a stable configuration under different conditions?  Is it possible to stabilize to a state with a variety of activation values?  What happens if you adjust `stop-threshold` exponent?  
+
+With `average-node-degree` in the 12-15 range, try starting with `averaging-transmission` off.  Then turn it on after the network has stabilized to a configuration in which there are large contiguous black and white regions.
+
+Under popco transmission, wait until regions of black and white opinions stabilize, with a few conflicted grey nodes in between them.  Measure the cohesion of the black and white regions.  Measure the cohesion of regions that overlap with them.  Notice how cohesion changes as you add and remove nodes from the set of selected nodes.
+
+Try adjusting `confidence-bound`.  How does this change the behavior of the model?
+
+Try adjusting `morris-switch-threshold` when using the procedure described in the "Morris transmission" section.  What happens when you turn on `morris-symmetric?`  Why?
+
+## DISCUSSION
+
+Maybe a way to think about the relationship between (1) popco transmission model without bounded confidence, (2) game theoretic models such as Morris's (2000) and some in Alexander (2007), and (3) bounded confidence models with averaging transmission, is that they all allow the effect of neighbors on a node to be sharply restricted in some situations, or to be subject to competition.  This is what allows maintenance of disagreement.  In averaging models without bounded confidence, by contrast, the effect of neighbors may be small, but it is persistent and constant.  
+
+Using popco transmission without bounded confidence, the effect of each neighbor is always restricted to a maximum of (a normal distribution around) `trust-mean`, regardless of how strong neighbors' beliefs are. In the game-theoretic models mentioned above, the effects of neighbors is restricted by payoff values.  In popco transmission models and these game-theoretic models, there is a competition between influences of neighbors who disagree with each other, so that if there is sufficiently more influence from one set of competing neighbors, the others end up having no effect.  In bounded confidence models, the effect of neighbors is curtailed when their opinions differ too much from the recipient node's.  In averaging models, each neighbor *always* has an influence, no matter what the receiver or other neighbors think.
+
+## REFERENCES
+
+Alexander, J. M. (2007). _The Structural Evolution of Morality_. Cambridge University Press.
+
+DeGroot, M. H. (1974, March). "Reaching a consensus". _Journal of the American Statistical Association_ 69(345), 118–121.
+
+Hegselmann, R. and U. Krause (2002). "Opinion dynamics and bounded confidence: Models, analysis, and simulation". _Journal of Artificial Societies and Social Simulation_ 5(3), 1–33.
+
+Grim, P., D. J. Singer, C. Reade, and S. Fisher (2011). "Information dynamics across linked sub-networks: Genes, germs, and memes". In _Proceedings, AAAI Fall Symposium on Complex Systems: Energy, Information, and Intelligence_. AAAI Press.
+
+Holyoak, K. J. and P. Thagard (1989). "Analogical mapping by constraint satisfaction". _Cognitive Science_ 13, 295–355.
+
+Lehrer, K. and C. Wagner (1981). _Rational Consensus in Science and Society_. D. Reidel Publishing.
+
+Morris, S. (2000). "Contagion". _Review of Economic Studies_ 67, 57–78.
+
+Newman, M. E. J. (2010). _Networks: An Introduction_. Oxford University Press.
+
+Vega-Redondo, F. (2007). _Complex Social Networks_. Cambridge University Press.
+
+Wasserman, S. and K. Faust (1994). _Social Network Analysis: Methods and Applications_. Cambridge University Press.
+
+Young, H. P. (1998). _Individual Strategy and Social Structure: An Evolutionary Theory of Institutions_. Princeton University Press.
+
+## MODELS USED AS STARTING POINTS
+
+Stonedahl, F. and Wilensky, U. (2008). "NetLogo Virus on a Network model". http://ccl.northwestern.edu/netlogo/models/VirusonaNetwork. Center for Connected Learning and Computer-Based Modeling, Northwestern Institute on Complex Systems, Northwestern University, Evanston, IL.
 @#$#@#$#@
 default
 true
