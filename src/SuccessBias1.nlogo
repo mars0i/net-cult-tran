@@ -1682,7 +1682,7 @@ TEXTBOX
 820
 215
 1015
-240
+245
 Fraction who receive messages from random members of pop:
 11
 0.0
