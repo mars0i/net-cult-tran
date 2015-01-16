@@ -1110,7 +1110,7 @@ prob-of-transmission-bias
 prob-of-transmission-bias
 -1
 1
-0.1
+0
 .01
 1
 NIL
@@ -1657,7 +1657,7 @@ global-receiver-frac
 global-receiver-frac
 0
 1
-0.2
+0
 0.01
 1
 NIL
