@@ -1680,9 +1680,9 @@ HORIZONTAL
 
 TEXTBOX
 820
-215
+220
 1015
-245
+250
 Fraction who receive messages from random members of pop:
 11
 0.0
