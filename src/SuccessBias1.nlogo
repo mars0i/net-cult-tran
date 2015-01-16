@@ -1727,6 +1727,11 @@ When `averaging-transmission` is set to on (true), the new activation that resul
 
 For both methods of transmission, if `confidence-bound` is set to something other than 2, then persons whose activations differ by more than this amount will not communicate.  This is a way to model the idea that people will often ignore opinions that differ too much from their own.    (In Hegselmann & Krause's (2002) models, confidence bounds > .8 give the same result in the end for averaging transmission, but that doesn't seem to be the case in this version of averaging transmission, perhaps because whether one person says something to its neighbor is stochastic here.)
 
+## GLOBAL TRANSMISSION
+
+Normally, all transmission is two-way transmission across links to neighbors.  If `global-tran-frac` is non-zero, it gives the fraction of members of the population who will *also* receive transmission from random members of the population on that tick.  `num-global-senders-per-recvr` determines the number of random senders that may attempt to transmit to each such receiver.  (See doc/AddingGlobalTran.md for an explanation
+of why this function is parameterized in the way that it is.)
+
 ## MORRIS TRANSMISSION
 
 Transmission rule based on Morris, S. (2000) and Vega-Redondo (2007), chapter 5.  
