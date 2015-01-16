@@ -382,15 +382,34 @@ end
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; "popco"-style cultural transmission and averaging transmission
 
-; Transmit to any neighbor if probabilistically decide to transmit along that link.
-; Probability is determined by activation value.
 to transmit-cultvars
+  network-transmit-cultvars
+  global-receive-cultvars
+end
+
+; Transmit to any neighbor if probabilistically decide to transmit along that link.
+; Probability is determined by activation value.  This could be done from the point
+; of view of the sender or of the receiver.  We do it from the point of view of the
+; sender (partly because that's how popco does it).
+to network-transmit-cultvars
   ask persons
     [let message cultvar-to-message activation
-     let num-global-friends random (ceiling (num-persons * global-tran-prob)) ; ceiling makes num-persons the max; random makes max 1 less: we are choosing from *other* persons than this one
-     ask (turtle-set link-neighbors (other n-of num-global-friends persons))
+     ask link-neighbors
        [if transmit-cultvar? message    ; if I decide to transmit along this link
            [receive-cultvar message]]]  ; ask neighbor to receive my message
+end
+
+;; Our original transmission routines such as receive-utterance choose receivers per sender.
+;; Here the opposite is more convenient, so we have to be a little convoluted, choosing receivers,
+;; then senders, who in turn ask their receivers to receive what they're sending.
+;; (Other methods I've explored have not been simpler.)
+to global-receive-cultvars
+  let num-global-receivers floor (num-persons * global-receiver-frac)
+  ask n-of num-global-receivers persons [
+    ask other n-of num-global-senders-per-recvr persons
+      [let message cultvar-to-message activation
+       if transmit-cultvar? message               ; if sender decides to transmit along this link
+         [ask myself [receive-cultvar message]]]] ; it asks receiver to receive its message
 end
 
 ; Decide probabilistically whether to report your cultvar to an individual:
@@ -1007,7 +1026,7 @@ average-node-degree
 average-node-degree
 1
 min (list 500 (nodes-per-subnet - 1))
-14
+15
 1
 1
 NIL
@@ -1091,8 +1110,8 @@ prob-of-transmission-bias
 prob-of-transmission-bias
 -1
 1
-0
-.02
+0.1
+.01
 1
 NIL
 HORIZONTAL
@@ -1219,9 +1238,9 @@ NIL
 
 SLIDER
 820
-550
+595
 1023
-583
+628
 stop-threshold-exponent
 stop-threshold-exponent
 -20
@@ -1234,9 +1253,9 @@ HORIZONTAL
 
 TEXTBOX
 825
-585
+630
 1024
-628
+673
 Iteration stops if max activn change is < 10 ^ stop-threshold-exponent.  Less negative means stop sooner.
 11
 0.0
@@ -1271,9 +1290,9 @@ POPCO-style transmission:
 
 SLIDER
 820
-460
+500
 1025
-493
+533
 morris-switch-threshold
 morris-switch-threshold
 0
@@ -1286,9 +1305,9 @@ HORIZONTAL
 
 BUTTON
 915
-425
+465
 1025
-459
+499
 morris-go once
 morris-go
 NIL
@@ -1303,9 +1322,9 @@ NIL
 
 BUTTON
 820
-425
+465
 917
-459
+499
 NIL
 morris-go
 T
@@ -1320,9 +1339,9 @@ NIL
 
 TEXTBOX
 822
-410
+450
 967
-428
+468
 Morris-style transmission:
 11
 0.0
@@ -1364,9 +1383,9 @@ NIL
 
 SWITCH
 820
-495
+535
 1025
-528
+568
 morris-symmetric?
 morris-symmetric?
 1
@@ -1570,9 +1589,9 @@ make-pundit
 
 SWITCH
 820
-300
+340
 1025
-333
+373
 averaging-transmission
 averaging-transmission
 1
@@ -1581,9 +1600,9 @@ averaging-transmission
 
 SLIDER
 820
-335
+375
 1025
-368
+408
 weight-on-senders-activn
 weight-on-senders-activn
 0
@@ -1596,9 +1615,9 @@ HORIZONTAL
 
 SLIDER
 820
-370
+410
 1025
-403
+443
 confidence-bound
 confidence-bound
 0
@@ -1621,9 +1640,9 @@ Reqs subnets >= 2
 
 TEXTBOX
 820
-285
+325
 970
-303
+343
 Averaging transmission:
 11
 0.0
@@ -1631,25 +1650,40 @@ Averaging transmission:
 
 SLIDER
 820
-245
-960
-278
-global-tran-prob
-global-tran-prob
+250
+1025
+283
+global-receiver-frac
+global-receiver-frac
 0
 1
-0
+0.2
 0.01
 1
 NIL
 HORIZONTAL
 
+SLIDER
+820
+285
+1025
+318
+num-global-senders-per-recvr
+num-global-senders-per-recvr
+1
+10
+1
+1
+1
+NIL
+HORIZONTAL
+
 TEXTBOX
-825
+820
 215
-965
+1015
 240
-Also transmit to random this prob of others if > 0
+Fraction who receive messages from random members of pop:
 11
 0.0
 1
