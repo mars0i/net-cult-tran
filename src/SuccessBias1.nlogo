@@ -462,7 +462,7 @@ end
 ;; result ranges from 1 to 2
 to-report dist-from-extremum [incoming-activn activn]
   let dist ifelse-value (incoming-activn <= 0)
-                        [activn - min-activn] ; if incoming-activn is pushes in negative direction, get current distance from the min
+                        [activn - min-activn] ; if incoming-activn pushes in negative direction, get current distance from the min
                         [max-activn - activn] ; if incoming activen pushes in positive direction, get distance from max
   report max (list 1 dist)
 end
