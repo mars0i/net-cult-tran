@@ -460,10 +460,10 @@ to-report new-activn-popco-tran [activn incoming-activn]
 end
 
 ;; result ranges from 1 to 2
-to-report dist-from-extremum [incoming-activn current-activn]
+to-report dist-from-extremum [incoming-activn activn]
   let dist ifelse-value (incoming-activn <= 0)
-                        [activation - min-activn] ; if incoming-activn is pushes in negative direction, get current distance from the min
-                        [max-activn - activation] ; if incoming activen pushes in positive direction, get distance from max
+                        [activn - min-activn] ; if incoming-activn is pushes in negative direction, get current distance from the min
+                        [max-activn - activn] ; if incoming activen pushes in positive direction, get distance from max
   report max (list 1 dist)
 end
 
@@ -1607,7 +1607,7 @@ weight-on-senders-activn
 weight-on-senders-activn
 0
 1
-0
+0.5
 .05
 1
 NIL
