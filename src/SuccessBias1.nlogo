@@ -384,7 +384,11 @@ end
 
 to transmit-cultvars
   network-transmit-cultvars
-  global-receive-cultvars
+  global-transmit-cultvars
+end
+
+to-report cultvar-to-message [activn]
+  report activn
 end
 
 ; Transmit to any neighbor if probabilistically decide to transmit along that link.
@@ -403,7 +407,7 @@ end
 ;; Here the opposite is more convenient, so we have to be a little convoluted, choosing receivers,
 ;; then senders, who in turn ask their receivers to receive what they're sending.
 ;; (Other methods I've explored have not been simpler.)
-to global-receive-cultvars
+to global-transmit-cultvars
   let num-global-receivers floor (num-persons * global-receiver-frac)
   ask n-of num-global-receivers persons [
     ask other n-of num-global-senders-per-recvr persons
@@ -425,45 +429,46 @@ to-report transmit-cultvar? [activn]
   report (abs (activn + prob-of-transmission-bias)) > (random-float 1)
 end
 
-to-report cultvar-to-message [activn]
-  report activn
-end
-
-; RECEIVE-CULTVAR
-; Let an incoming cultvar affect strength of receiver's cultvar.
-; If incoming-activn is positive, it will move receiver's activn in that direction;
-; if negative, it will push in negative direction. However, the degree of push will
-; be scaled by how far the current activation is from the extremum in the direction
-; of push.  If the distance is large, the incoming-activn will have a large effect.
-; If the distance is small, then incoming-activn's effect will be small, so that it's
-; harder to get to the extrema. The method used to do this is often used to update
-; nodes in connectionist/neural networks (e.g. Holyoak & Thagard, Cognitive Science 13, 295-355 (1989), p. 313). 
+;; RECEIVE-CULTVAR
+;; Let an incoming cultvar affect strength of receiver's cultvar, using
+;; either averaging transmission or popco-style transmission.
 to receive-cultvar [message]
   let candidate-activn 0
   if-else is-pundit
     [set candidate-activn 1] ; designated pundits never listen to anyone
     [if-else averaging-transmission
-      [set candidate-activn new-activn-averaging-tran activation message]
-      [set candidate-activn new-activn-popco-tran activation message]]
+      [set candidate-activn (new-activn-averaging-tran activation message)]
+      [set candidate-activn (new-activn-popco-tran activation message)]]
   set next-activation max (list min-activn (min (list max-activn candidate-activn))) ; failsafe: cap at extrema.
 end
 
-to-report new-activn-averaging-tran [activn incoming-activn]
-  if-else (abs (activn - incoming-activn)) < confidence-bound
-    [report (incoming-activn * weight-on-senders-activn) + (activn * (1 - weight-on-senders-activn))]
+to-report new-activn-averaging-tran [activn message]
+  if-else (abs (activn - message)) < confidence-bound
+    [report (message * weight-on-senders-activn) + (activn * (1 - weight-on-senders-activn))]
     [report 0]
 end
 
-to-report new-activn-popco-tran [activn incoming-activn]
-  let effective-in-activn (sign-of incoming-activn) * (random-normal trust-mean trust-stdev)
-  report (activn + (effective-in-activn * (dist-from-extremum effective-in-activn activn))) ; sign will come from incoming-activn; scaling factors are positive
+;; If message is positive, it will move receiver's activn in that direction;
+;; if negative, it will push in negative direction. However, unlike with averaging
+;; transmission, here the *size* of message doesn't matter--only its sign, 
+;; and global parameters trust-mean and trust-stdev that are set in the UI.  
+;; The resulting degree of push will be scaled by how far the receiver's activation 
+;; is from the extremum in the direction of push, if that distance is > 1.  
+;; If the distance is large, the message will have a large effect.
+;; If the distance is small, then message's effect will be small, so that it's
+;; harder to get to the extrema. The method used to do this is somewhat similar 
+;; to ones used to update nodes in connectionist/neural networks
+;; (e.g. Holyoak & Thagard, Cognitive Science 13, 295-355 (1989), p. 313).
+to-report new-activn-popco-tran [activn message]
+  let effective-in-activn (sign-of message) * (random-normal trust-mean trust-stdev)
+  report (activn + (effective-in-activn * (dist-from-extremum effective-in-activn activn))) ; sign will come from message; scaling factors are positive
 end
 
 ;; result ranges from 1 to 2
-to-report dist-from-extremum [incoming-activn activn]
-  let dist ifelse-value (incoming-activn <= 0)
-                        [activn - min-activn] ; if incoming-activn pushes in negative direction, get current distance from the min
-                        [max-activn - activn] ; if incoming activen pushes in positive direction, get distance from max
+to-report dist-from-extremum [message activn]
+  let dist ifelse-value (message <= 0)        ; is this message pushing toward min-activn?
+                        [activn - min-activn] ; if message pushes in negative direction, get receiver's distance from the min
+                        [max-activn - activn] ; if message pushes in positive direction, get receiver's distance from the max
   report max (list 1 dist)
 end
 
