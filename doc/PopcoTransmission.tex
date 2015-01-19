@@ -1,0 +1,47 @@
+\documentclass[12pt]{article}
+\usepackage{natbib}
+\usepackage{xspace}
+\usepackage{graphicx}
+%\usepackage{url}
+\usepackage{relsize} % provides \relscale, \larger, etc. to be used *in the document*
+\usepackage{color}
+\XeTeXdashbreakstate=1 % Tell XeLaTeX it's OK to break lines after em-dashes.
+\newcommand{\SetFont}[1]{\setmainfont[Ligatures=TeX]{#1}} % preferred to "Mapping=tex-text"
+\newcommand{\UseGaramond}[1]{%
+	\usepackage[urw-garamond]{mathdesign}  % goes before fontenc, fontspec, etc.
+	\usepackage[T1]{fontenc}
+	\usepackage{fontspec,xltxtra,xunicode}
+	\SetFont{#1}}
+\UseGaramond{EB Garamond}\newcommand{\myparagraph}[1]{\paragraph{\sc #1}}\newcommand{\myfontscale}{\relscale{1.07}}
+%\UseGaramond{GaramondNo8}\newcommand{\myparagraph}[1]{\paragraph{#1}}\newcommand{\myfontscale}{\relscale{1.07}}
+\usepackage[letterpaper,left=1.20in,right=1.20in,top=1.30in,bottom=1.30in]{geometry}
+%\renewcommand{\baselinestretch}{1.66}\normalsize % doublespace
+\renewcommand{\baselinestretch}{1.17}\normalsize % e.g. 12 on 14
+%\renewcommand{\baselinestretch}{1.26}\normalsize % e.g. 13 on 15
+\newcommand{\ie}{i.e.\@\xspace}
+\newcommand{\eg}{e.g.\@\xspace}
+\newcommand{\cf}{cf.\@\xspace}
+\newcommand{\etc}{etc.\@\xspace}
+\newcommand{\viz}{viz.\@\xspace}
+\newcommand{\vs}{vs.\@\xspace}
+\newcommand{\pr}{\mathsf{P}} % probability
+%\newcommand{\expct}{\mbox{\boldmath $\mathsf E\,$}}
+%\newcommand{\expct}{\mathsf E\,}
+%\newcommand{\cov}{\mathop{\rm cov}\nolimits}
+%\newcommand{\var}{\mathop{\rm var}\nolimits}
+%\newcommand{\var}{\sigma^2}
+\newcommand{\cmnt}[1]{}
+\renewcommand{\cmnt}[1]{{\color{red}[#1]}}
+\newcommand{\fn}[1]{\footnote{#1}}
+
+\author{Marshall Abrams, University of Alabama at Birmingham, mabrams@uab.edu}
+
+\begin{document}
+\myfontscale % only works in document, more or less
+
+
+
+%\bibliographystyle{myforthcoming} % the .bst file
+%\bibliography{phil}
+\end{document}
+
