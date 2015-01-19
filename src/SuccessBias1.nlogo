@@ -464,12 +464,12 @@ to-report new-activn-popco-tran [activn message]
   report (activn + (effective-in-activn * (dist-from-extremum effective-in-activn activn))) ; sign will come from message; scaling factors are positive
 end
 
-;; result ranges from 1 to 2
+;; result ranges from min-dist-from-extremum to 2
 to-report dist-from-extremum [message activn]
   let dist ifelse-value (message <= 0)        ; is this message pushing toward min-activn?
-                        [activn - min-activn] ; if message pushes in negative direction, get receiver's distance from the min
-                        [max-activn - activn] ; if message pushes in positive direction, get receiver's distance from the max
-  report max (list 1 dist)
+                        [activn - min-activn] ; if message pushes in negative direction, get receiver's distance from the min, which is in [0,2]
+                        [max-activn - activn] ; if message pushes in positive direction, get receiver's distance from the max, again in [0,2]
+  report max (list min-dist-from-extremum dist) ; min-dist-from-extremum is either 0 (result is in [0,2]) or 1 (result is in [1,2])
 end
 
 to update-activns
@@ -1031,7 +1031,7 @@ average-node-degree
 average-node-degree
 1
 min (list 500 (nodes-per-subnet - 1))
-15
+14
 1
 1
 NIL
@@ -1093,9 +1093,9 @@ PENS
 
 SLIDER
 820
-90
+150
 1025
-123
+183
 trust-mean
 trust-mean
 .01
@@ -1108,9 +1108,9 @@ HORIZONTAL
 
 SLIDER
 820
-175
+235
 1025
-208
+268
 prob-of-transmission-bias
 prob-of-transmission-bias
 -1
@@ -1123,9 +1123,9 @@ HORIZONTAL
 
 TEXTBOX
 995
-160
+220
 1032
-180
+240
 black
 10
 0.0
@@ -1133,9 +1133,9 @@ black
 
 TEXTBOX
 825
-160
+220
 855
-180
+240
 white
 10
 0.0
@@ -1143,9 +1143,9 @@ white
 
 SLIDER
 820
-125
+185
 1025
-158
+218
 trust-stdev
 trust-stdev
 0
@@ -1242,10 +1242,10 @@ NIL
 1
 
 SLIDER
-820
-595
-1023
-628
+1035
+540
+1238
+573
 stop-threshold-exponent
 stop-threshold-exponent
 -20
@@ -1257,10 +1257,10 @@ NIL
 HORIZONTAL
 
 TEXTBOX
-825
-630
-1024
-673
+1040
+575
+1239
+618
 Iteration stops if max activn change is < 10 ^ stop-threshold-exponent.  Less negative means stop sooner.
 11
 0.0
@@ -1295,9 +1295,9 @@ POPCO-style transmission:
 
 SLIDER
 820
-500
+560
 1025
-533
+593
 morris-switch-threshold
 morris-switch-threshold
 0
@@ -1310,9 +1310,9 @@ HORIZONTAL
 
 BUTTON
 915
-465
+525
 1025
-499
+559
 morris-go once
 morris-go
 NIL
@@ -1327,9 +1327,9 @@ NIL
 
 BUTTON
 820
-465
+525
 917
-499
+559
 NIL
 morris-go
 T
@@ -1344,9 +1344,9 @@ NIL
 
 TEXTBOX
 822
-450
+510
 967
-468
+528
 Morris-style transmission:
 11
 0.0
@@ -1388,9 +1388,9 @@ NIL
 
 SWITCH
 820
-535
+595
 1025
-568
+628
 morris-symmetric?
 morris-symmetric?
 1
@@ -1546,9 +1546,9 @@ toggle numeric node info:
 
 TEXTBOX
 820
-60
+65
 960
-78
+83
 transmission parameters:
 11
 0.0
@@ -1556,10 +1556,10 @@ transmission parameters:
 
 TEXTBOX
 820
-75
+80
 895
-93
-popco style:
+98
+\"popco\" style:
 11
 0.0
 1
@@ -1583,9 +1583,9 @@ NIL
 
 SWITCH
 5
-205
+210
 137
-238
+243
 make-pundit
 make-pundit
 1
@@ -1594,9 +1594,9 @@ make-pundit
 
 SWITCH
 820
-340
+400
 1025
-373
+433
 averaging-transmission
 averaging-transmission
 1
@@ -1605,9 +1605,9 @@ averaging-transmission
 
 SLIDER
 820
-375
+435
 1025
-408
+468
 weight-on-senders-activn
 weight-on-senders-activn
 0
@@ -1620,9 +1620,9 @@ HORIZONTAL
 
 SLIDER
 820
-410
+470
 1025
-443
+503
 confidence-bound
 confidence-bound
 0
@@ -1635,9 +1635,9 @@ HORIZONTAL
 
 TEXTBOX
 140
-210
 215
-240
+215
+245
 Reqs subnets >= 2
 11
 0.0
@@ -1645,9 +1645,9 @@ Reqs subnets >= 2
 
 TEXTBOX
 820
-325
+385
 970
-343
+403
 Averaging transmission:
 11
 0.0
@@ -1655,9 +1655,9 @@ Averaging transmission:
 
 SLIDER
 820
-250
+310
 1025
-283
+343
 global-receiver-frac
 global-receiver-frac
 0
@@ -1670,9 +1670,9 @@ HORIZONTAL
 
 SLIDER
 820
-285
+345
 1025
-318
+378
 num-global-senders-per-recvr
 num-global-senders-per-recvr
 1
@@ -1685,12 +1685,22 @@ HORIZONTAL
 
 TEXTBOX
 820
-220
+280
 1015
-250
+310
 Fraction who receive messages from random members of pop:
 11
 0.0
+1
+
+CHOOSER
+820
+100
+975
+145
+min-dist-from-extremum
+min-dist-from-extremum
+0 1
 1
 
 @#$#@#$#@
@@ -1723,6 +1733,10 @@ Degrees of confidence are not transmitted.  Instead, the degree of confidence (a
 On each tick, for each link attached to a person, the person randomly decides to "utter" the proposition to its (undirected) network neighbors, with probability equal to the absolute value of the degree of confidence plus `transmission-bias-prob`.  The value that's conveyed to the receiver of the utterance is `trust-mean` times the sign of the original degree of confidence, or a normally distributed value with mean `trust-mean` and standard deviation `trust-stdev`, if `trust-stdev` is not zero.  The effect of this input to the receiver's degree of confidence depends on how far the latter is from -1 or 1.
 
 If the activation increment (the value normally distributed around `trust-mean`) is positive, it will move receiver's activation in that direction; if negative, it will push in negative direction. However, the degree of push will be scaled by how far the current activation is from the extremum in the direction of push.  If the distance is large, the incoming activation will have a large effect. If the distance is small, then `incoming-activn`'s effect will be small, so that it's harder to get to the extremum. The underlying intuition is that if you already have a strong belief in a proposition, then when someone expresses agreement with you, it doesn't make much difference.  On the other hand, if you're undecided, then what people around tell you is more likely to make a big difference.  Also, if you have a strong belief that P, and someone disagrees with you, that can make a big difference in your opinion.  (However, for a common value of `trust-mean` such as .05, the effect is still small.) The method used to do the updating is similar to methods often used to update nodes in connectionist/neural networks (e.g. Holyoak & Thagard 1989).  This is clearly not Bayesian updating, by the way.
+
+Note that the distance of the current receiver's activation from the extremum in the direction of push ranges from 0 to 2.  Early on in the development of the models that were predecessors to this one, I set the minimum value of this distance to 1--i.e. I restricted the effect to be from 1 to 2.  My notes from that period don't explain why I did this.  Now I have this as an option in the UI: `min-dist-from-extremum` can take
+two values: 0, which allows the full range of scaling variation from 0 to 2; and 1, which provides the same behavior as in most of the predecessors (including CultranDejanet.nlogo, which is available in the NetLogo Modeling Commons).  Eventually I might get rid of this as an option, and only allow the full distance range, since that
+method is simpler.
 
 ## AVERAGING TRANSMISSION
 
