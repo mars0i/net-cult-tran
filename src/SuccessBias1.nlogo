@@ -1693,15 +1693,20 @@ Fraction who receive messages from random members of pop:
 0.0
 1
 
-CHOOSER
+SLIDER
 820
-100
-975
-145
+110
+1025
+143
 min-dist-from-extremum
 min-dist-from-extremum
-0 1
+0
+2
+0
+0.1
 1
+NIL
+HORIZONTAL
 
 @#$#@#$#@
 ## WHAT IS IT?
