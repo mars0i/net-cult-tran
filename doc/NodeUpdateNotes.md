@@ -67,12 +67,48 @@ This result ranges from 0 to 2.  When the receiver activn is negative
 positive, the scaling factor is near zero (or 1, if I use the
 traditional clipping that I'd added).
 
-So the message is one of two fixed quantities (usually 0.05 or -0.05).
-The scaling factor is always non-negative, from 0 to 2.  It is strong
-when the receiver activn is far from the extreme in the direction in
-which the message is pushing, and weak when the receiver activn is near
-the extreme in the direction in which the message is pushing.
+The incoming increment is often one of two fixed quantities (usually
+0.05 or -0.05), unless the stddev is set to something other than 0.  The
+scaling factor is always non-negative, from 0 to 2.  It is strong when
+the receiver activn is far from the extreme in the direction in which
+the incoming increment is pushing, and weak when the receiver activn is
+near the extreme in the direction in which the message is pushing.
 
-e.g. if the receiver activn is 0.95, and the message is 0.05, a small
-fraction of that will be added.  If the message is -0.05, though,
-close to 0.10 will be subtracted.
+e.g. if the receiver activn is 0.95, and the incoming increment is 0.05,
+a small fraction of that will be added.  If the increment is
+-0.05, though, close to 0.10 will be subtracted.
+
+If there's clippping, because `min-dist-from-extremum` is set to
+something other than 0 (e.g. set it to 1, as in the old, fixed version),
+the effect is that the impact of the incoming increment, when the
+receiver activn is near an extreme and the increment is pushing toward
+that extreme, is that the effect of the increment is undiminished by
+closeness to the extreme.
+
+e.g. with `min-dist-from-extremum` = 0, if a incoming increment is
+pushing toward the extreme, as the receiver activn gets closer to that
+extreme, the impact of the increment decreases linearly.  But with
+`min-dist-from-extremum` = 1, once the receiver activn passes 0 in the
+direction of push, the impact of the increment is never diminished.  it
+remains at 1 * incoming increment.  The effect is that convergence to
+extrema is faster.
+
+Setting `min-dist-from-extremum` to 1 (old method) rather than 0 also
+makes the borders between black and white regions a bit cleaner.
+I think that this is probably why I originally restricted "distances"
+from extrema to being at least 1.
+
+The reason that the borders are cleaner is that once a node is on the
+way to converging to an extremum, it will get there, as will its
+neighbors on its side of the border.  So the mutual support between them
+is stronger.
+
+Whereas when `min-dist-from-extremum` is 0, neighbors that share the same
+extreme value have less impact on each other, so there's less mutual
+support.  Thus it's easier for those on the other side of the border
+to pull those on this side away from the extreme.  
+
+That's my current reasoning, anyway.
+
+(Note that messier borders means a greater chance of an unlikely
+invasion.)
