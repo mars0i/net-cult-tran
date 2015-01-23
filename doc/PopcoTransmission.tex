@@ -12,12 +12,14 @@
 	\usepackage[T1]{fontenc}
 	\usepackage{fontspec,xltxtra,xunicode}
 	\SetFont{#1}}
-\UseGaramond{EB Garamond}\newcommand{\myparagraph}[1]{\paragraph{\sc #1}}\newcommand{\myfontscale}{\relscale{1.07}}
-%\UseGaramond{GaramondNo8}\newcommand{\myparagraph}[1]{\paragraph{#1}}\newcommand{\myfontscale}{\relscale{1.07}}
+%\UseGaramond{EB Garamond}\newcommand{\myparagraph}[1]{\paragraph{\sc #1}}\newcommand{\myfontscale}{\relscale{1.07}}
+\UseGaramond{GaramondNo8}\newcommand{\myparagraph}[1]{\paragraph{#1}}\newcommand{\myfontscale}{\relscale{1.07}}
 \usepackage[letterpaper,left=1.20in,right=1.20in,top=1.30in,bottom=1.30in]{geometry}
 %\renewcommand{\baselinestretch}{1.66}\normalsize % doublespace
 \renewcommand{\baselinestretch}{1.17}\normalsize % e.g. 12 on 14
 %\renewcommand{\baselinestretch}{1.26}\normalsize % e.g. 13 on 15
+\setlength{\parindent}{0in}  % Don't indent paragraphs
+\setlength{\parskip}{2.5ex}    % Add space between paragraphs
 \newcommand{\ie}{i.e.\@\xspace}
 \newcommand{\eg}{e.g.\@\xspace}
 \newcommand{\cf}{cf.\@\xspace}
@@ -39,7 +41,48 @@
 \begin{document}
 \myfontscale % only works in document, more or less
 
+Let $a$ be the activation, and $a'$ be the next activation.
+Then, if the incoming communication is .05, the update function
+is:
+\[
+x' = \min(1,x + .05(1 - x)) = \min(1,.95x + .05)
+\]
+(A positive increment can't push the activation below the
+minimum, so we can ignore that possibility.)
 
+When the incoming communiction is -.05, the update function is:
+\[
+x' = 
+\max(-1,x - .05(x \;\,-\;\;\; -1)) = \max(-1,x - .05(x + 1)) = 
+\]
+%
+\[
+\max(-1,x - .05x - .05)) = \max(-1, .95x - .05)
+\]
+%
+
+So the general update function is
+\[
+.95x \pm .05
+\]
+with the additional constraint that values outside of [-1,1] are
+mapped back to the nearest extremum.
+
+Note that although the original formula was intended to reflect
+distance of the activation from the extremum in the direction of
+push, we see here that the formula reduces to one in which:
+\begin{itemize}\vspace{-2ex}
+\item We simply reduce the activation by 5\%, whatever the
+activation was\ \ldots
+\item Then add or subtract .05 (no scaling here)
+\item And then reduce the result back to the extremeum, if necessary.
+\end{itemize}
+%
+
+(Note that the $.95x$ is not a real {\em decay\/} function, since if
+a node receives no transmission, this reduction isn't applied.  A
+real decay function acts on every tick, regardless of what happens
+with incoming transmissions.)
 
 %\bibliographystyle{myforthcoming} % the .bst file
 %\bibliography{phil}

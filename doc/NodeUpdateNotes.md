@@ -1,7 +1,7 @@
 NoteUpdateNotes.md
 ====
 
-### transmission in popco
+## transmission in popco
 
 In popco, nodes are updated like this:
 
@@ -27,7 +27,7 @@ is a linear function of activation, ranging from 0 to 2.  (However, the
 signals coming (from positive nodes) over the negative links are
 negative, so the overall effect here is negative.)
 
-### "popco tran" in NetLogo
+## "popco tran" in NetLogo
 
 What happens in "popco tran" my NetLogo network tran models is
 somewhat analogous.  
@@ -38,13 +38,14 @@ of analogous to a positive link), the message sent is scaled by the
 distance of the receiver's activation from the max, *but only if this is
 greater than 1*.  
 
-(Why did I do this?  Well it's a bit more stabilizing, as I recall.  I
-made the change early on, in NetworkExperiment1.nlogo in the original
-popco repo, at history tag e2a52af
-[e2a52af1304f60c2eca2946231eca1760d9b5dd8].  Neither the commit message
-or comments in the source code explains the choice--maybe because I was
-just experimenting at that point.  Now--Jan 2015--I've got a chooser
-in the UI that can try out both options.)
+(Why did I do this?  Well it's a bit more stabilizing, as I
+recall--**see below**.  I made the change early on, in
+NetworkExperiment1.nlogo in the original popco repo, at history tag
+e2a52af [e2a52af1304f60c2eca2946231eca1760d9b5dd8].  Neither the
+commit message or comments in the source code explains the
+choice--maybe because I was just experimenting at that point. 
+Now--Jan 2015--I've got a chooser in the UI that can try out both
+options.)
 
 If the sender's activation is negative, then the negative message sent
 is scaled by the receiver's activation minus the min, i.e. plus it's
@@ -77,6 +78,8 @@ near the extreme in the direction in which the message is pushing.
 e.g. if the receiver activn is 0.95, and the incoming increment is 0.05,
 a small fraction of that will be added.  If the increment is
 -0.05, though, close to 0.10 will be subtracted.
+
+#### On clipping min distance to 1:
 
 If there's clippping, because `min-dist-from-extremum` is set to
 something other than 0 (e.g. set it to 1, as in the old, fixed version),
@@ -112,3 +115,42 @@ That's my current reasoning, anyway.
 
 (Note that messier borders means a greater chance of an unlikely
 invasion.)
+
+
+## A bug?
+
+My conception of "popco" transmission in CultranDejanet and its
+predecessors and successors is that the default tran combines all
+inputs to a node.  Upon studying my code more carefully (in
+SuccessBias1.nlogo), this appears to be incorrect.
+
+`network-transmit-cultvars` `ask`s all persons--effectively in
+parallel--to try transmit to each of their link-neighbors.  So far, so
+good.  If the transmitting person decides to transmit, then
+`receive-cultvar` is called on the neighbor.  However, it appears that
+*from this point on*, there is not parallel update.  It's just
+first-come, first served.  
+
+This is so even though I use a current `activation` variable and a
+`next-activation` variable that temporarily holds the next activation.
+Yes, all of the `activations` are replacec by `next-activation` at the
+same time.
+
+However, if a receiving node has more than one neighbor that asks it
+to receive cultvars, the updated activn in `next-activation` from one
+transmission will simply get overwritten by the communication from
+other neighbors.  This communication may be a scaled 0.05 or a scaled
+-0.05, but all communications are one of those possibilities, and only
+one of them counts.  
+
+If this is right, then the fact that "popco" tran generates clusters
+of similarity and difference is simply due to the fact that the
+decision to transmit is stochastic: If you have more neighbors, you
+have more neighbors flipping a coin about whether to transmit to you.
+If fewer of them flip the coin, then there is a greater chance that no
+one will communicate with you.  If more do, then there's a greater
+chance that you will receive a communication.  Moreover, if your
+neighbors all have the same extreme activation, then they're likely to
+say something.
+
+*Is this correct???*
