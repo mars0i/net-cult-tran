@@ -371,6 +371,7 @@ to go
   transmit-cultvars
   if (activns-settled) [set ready-to-stop true] ; compares activation with next-activation, so must run between transmit-cultvars and update-activns
   update-activns                                ; on the other hand, we do want to complete the activation updating process even if about to stop
+  ;let yo [activation] of persons print (sentence (max yo) (min yo)) ; DEBUG
   tick
 end
 
@@ -439,7 +440,7 @@ to receive-cultvar [message]
     [if-else averaging-transmission
       [set candidate-activn (new-activn-averaging-tran activation message)]
       [set candidate-activn (new-activn-popco-tran activation message)]]
-  set next-activation max (list min-activn (min (list max-activn candidate-activn))) ; failsafe: cap at extrema.
+  set next-activation max (list min-activn (min (list max-activn candidate-activn))) ; failsafe: cap at extrema needed when min-dist-from-extremum is not 0.
 end
 
 to-report new-activn-averaging-tran [activn message]
@@ -917,14 +918,6 @@ end
 to-report stdev [lis]
   report sqrt (var lis)
 end
-
-to yo
-  let counts [] 
-  foreach (sort turtles) [
-    set counts lput ([count link-neighbors] of ?) counts
-  ]
-  show counts
-end
 @#$#@#$#@
 GRAPHICS-WINDOW
 215
@@ -1302,8 +1295,8 @@ morris-switch-threshold
 morris-switch-threshold
 0
 .5
-0.4
-.01
+0.375
+.005
 1
 NIL
 HORIZONTAL
@@ -1393,7 +1386,7 @@ SWITCH
 628
 morris-symmetric?
 morris-symmetric?
-1
+0
 1
 -1000
 
