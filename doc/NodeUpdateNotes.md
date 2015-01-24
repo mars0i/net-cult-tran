@@ -133,9 +133,8 @@ first-come, first served.
 
 This is so even though I use a current `activation` variable and a
 `next-activation` variable that temporarily holds the next activation.
-Yes, all of the `activations` are replacec by `next-activation` at the
+Yes, all of the `activations` are replaced by `next-activation` at the
 same time.
-
 However, if a receiving node has more than one neighbor that asks it
 to receive cultvars, the updated activn in `next-activation` from one
 transmission will simply get overwritten by the communication from
@@ -151,6 +150,16 @@ If fewer of them flip the coin, then there is a greater chance that no
 one will communicate with you.  If more do, then there's a greater
 chance that you will receive a communication.  Moreover, if your
 neighbors all have the same extreme activation, then they're likely to
-say something.
+say something.  One of them will probably succeed.  Further, if
+you also have, say, one neighbor with the opposite extreme
+activation, it will sometimes, just by chance, get through to
+you--sometimes it will win the per-tick lottery to talk to you.
+Its communication will have the same strength of effect as any of
+the other neighbors who agree with you would have had.  (See
+PopcoTransmission.{pdf,tex}, which clarifies that the effect is
+not, as I'd thought, greater when pushing toward the opposite
+extreme.)  However, the effect of this opposition neighbor
+getting through to you is likely to be undone in the next tick,
+since most of your neighbors disagree with it.
 
-*Is this correct???*
+*Is this correct??*

@@ -1,4 +1,4 @@
-\documentclass[12pt]{article}
+\documentclass[11pt]{article}
 \usepackage{natbib}
 \usepackage{xspace}
 \usepackage{graphicx}
@@ -12,9 +12,9 @@
 	\usepackage[T1]{fontenc}
 	\usepackage{fontspec,xltxtra,xunicode}
 	\SetFont{#1}}
-%\UseGaramond{EB Garamond}\newcommand{\myparagraph}[1]{\paragraph{\sc #1}}\newcommand{\myfontscale}{\relscale{1.07}}
-\UseGaramond{GaramondNo8}\newcommand{\myparagraph}[1]{\paragraph{#1}}\newcommand{\myfontscale}{\relscale{1.07}}
-\usepackage[letterpaper,left=1.20in,right=1.20in,top=1.30in,bottom=1.30in]{geometry}
+%\UseGaramond{EB Garamond}\newcommand{\myparagraph}[1]{\paragraph{\sc #1}}\newcommand{\myfontscale}{\relscale{1.00}}
+\UseGaramond{GaramondNo8}\newcommand{\myparagraph}[1]{\paragraph{#1}}\newcommand{\myfontscale}{\relscale{1.00}}
+\usepackage[letterpaper,left=1.25in,right=1.25in,top=0.90in,bottom=0.90in]{geometry}
 %\renewcommand{\baselinestretch}{1.66}\normalsize % doublespace
 \renewcommand{\baselinestretch}{1.17}\normalsize % e.g. 12 on 14
 %\renewcommand{\baselinestretch}{1.26}\normalsize % e.g. 13 on 15
@@ -39,9 +39,14 @@
 \author{Marshall Abrams, University of Alabama at Birmingham, mabrams@uab.edu}
 
 \begin{document}
+\pagestyle{empty}
 \myfontscale % only works in document, more or less
 
-Let $a$ be the activation, and $a'$ be the next activation.
+{\Large ``popco" transmission in CultranDejanet, SuccessBias1, etc.}\\
+{\large Marshall Abrams}
+
+
+Let $a$ be the activation of a node, and $a'$ be the next activation.
 Then, if the incoming communication is .05, the update function
 is:
 \[
@@ -53,11 +58,11 @@ minimum, so we can ignore that possibility.)
 When the incoming communiction is -.05, the update function is:
 \[
 x' = 
-\max(-1,x - .05(x \;\,-\;\;\; -1)) = \max(-1,x - .05(x + 1)) = 
+\max(-1,x - .05(x \;\,-\;\;\; -1)) = 
 \]
 %
 \[
-\max(-1,x - .05x - .05)) = \max(-1, .95x - .05)
+\max(-1,x - .05(x + 1)) =  \max(-1, .95x - .05)
 \]
 %
 
@@ -75,14 +80,33 @@ push, we see here that the formula reduces to one in which:
 \item We simply reduce the activation by 5\%, whatever the
 activation was\ \ldots
 \item Then add or subtract .05 (no scaling here)
-\item And then reduce the result back to the extremeum, if necessary.
+\item And then reduce the result back to the extremum, if necessary.
 \end{itemize}
-%
+Well, I suppose there is still a different way to think about the
+process.  After all, $1-x$ times .05, where $x = -1$, is
+equal to .10, whereas when $x=1$, it's 0.  This is reflected
+in the fact that the result of 0.95 times $x$ differs depending
+on $x$.  It's still a linear function, $ax+b$, though.
 
-(Note that the $.95x$ is not a real {\em decay\/} function, since if
-a node receives no transmission, this reduction isn't applied.  A
-real decay function acts on every tick, regardless of what happens
-with incoming transmissions.)
+Note that when $x=1$ and the communication is .05, the effect is
+$.95 + .05$, i.e. to simply leave $x$ as is.  Likewise when
+$x=-1$ and the communication is -.05.  Oh---so the $\min$/$\max$
+operations are not needed.  Ah---They're not needed for the above
+formulas, but clipping to 1 and -1 is needed when 
+{\tt min-dist-from-extremum} is not 0, since in that case the
+increment will often be greater than .05, in effect.  \eg when 
+{\tt min-dist-from-extremum} $=1$, the first formula above would
+become $\min(1,x+.05)$ whenever $x$ was positive, so when \eg
+$x=1$, $x+.05>1$.  (This also conveys how setting {\tt
+min-dist-from-extremum} to a value other than 1 causes
+convergence to occur more quickly, and causes departure from an extreme
+to become more difficult.  \cf NodeUpdateNotes.md.)
+
+(Note that the $.95x$ is not the same as a decay function in the
+sense that's common in connectionist/neural networks, since if a
+node receives no transmission, this reduction isn't applied here.  A
+real decay function acts on every tick regardless of what
+happens with incoming transmissions.)
 
 %\bibliographystyle{myforthcoming} % the .bst file
 %\bibliography{phil}
