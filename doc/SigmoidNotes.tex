@@ -1,0 +1,89 @@
+\documentclass[11pt]{article}
+\usepackage{natbib}
+\usepackage{xspace}
+\usepackage{graphicx}
+\usepackage{url}
+\usepackage{relsize} % provides \relscale, \larger, etc. to be used *in the document*
+\usepackage{color}
+\XeTeXdashbreakstate=1 % Tell XeLaTeX it's OK to break lines after em-dashes.
+\newcommand{\SetFont}[1]{\setmainfont[Ligatures=TeX]{#1}} % preferred to "Mapping=tex-text"
+\newcommand{\UseGaramond}[1]{%
+	\usepackage[urw-garamond]{mathdesign}  % goes before fontenc, fontspec, etc.
+	\usepackage[T1]{fontenc}
+	\usepackage{fontspec,xltxtra,xunicode}
+	\SetFont{#1}}
+%\UseGaramond{EB Garamond}\newcommand{\myparagraph}[1]{\paragraph{\sc #1}}\newcommand{\myfontscale}{\relscale{1.00}}
+\UseGaramond{GaramondNo8}\newcommand{\myparagraph}[1]{\paragraph{#1}}\newcommand{\myfontscale}{\relscale{1.00}}
+\usepackage[letterpaper,left=1.25in,right=1.25in,top=0.90in,bottom=0.90in]{geometry}
+%\renewcommand{\baselinestretch}{1.66}\normalsize % doublespace
+\renewcommand{\baselinestretch}{1.17}\normalsize % e.g. 12 on 14
+%\renewcommand{\baselinestretch}{1.26}\normalsize % e.g. 13 on 15
+\setlength{\parindent}{0in}  % Don't indent paragraphs
+\setlength{\parskip}{2.5ex}    % Add space between paragraphs
+\newcommand{\ie}{i.e.\@\xspace}
+\newcommand{\eg}{e.g.\@\xspace}
+\newcommand{\cf}{cf.\@\xspace}
+\newcommand{\etc}{etc.\@\xspace}
+\newcommand{\viz}{viz.\@\xspace}
+\newcommand{\vs}{vs.\@\xspace}
+\newcommand{\pr}{\mathsf{P}} % probability
+%\newcommand{\expct}{\mbox{\boldmath $\mathsf E\,$}}
+%\newcommand{\expct}{\mathsf E\,}
+%\newcommand{\cov}{\mathop{\rm cov}\nolimits}
+%\newcommand{\var}{\mathop{\rm var}\nolimits}
+%\newcommand{\var}{\sigma^2}
+\newcommand{\cmnt}[1]{}
+\renewcommand{\cmnt}[1]{{\color{red}[#1]}}
+\newcommand{\fn}[1]{\footnote{#1}}
+
+\author{Marshall Abrams, University of Alabama at Birmingham, mabrams@uab.edu}
+
+\begin{document}
+\pagestyle{empty}
+\myfontscale % only works in document, more or less
+
+{\Large Notes on sigmoid functions}\\
+{\large Marshall Abrams, University of Alabama at Birmingham}
+
+In response to my question, Belov at math.stackexchange.com\fn{
+    \tiny \url{http://math.stackexchange.com/questions/367078/computationally-simple-sigmoid-with-specific-slopes-at-specific-points}}
+suggested at that the following function 
+\[
+    \tanh\frac{kx}{(1-x^2)^{1/n}}
+\]
+with $k>0$, $n\geq 1$ would be such that:
+\begin{itemize}
+\item derivatives at -1 and 1 are zero
+\item derivative is not zero between -1 and 1
+\item derivative at 0 is 1, maybe can be controlled with a
+    parameter
+\item I can control the change in derivative near -1 and 1 within
+    $(-1,1)$, so that the derivative doesn't depart from zero too
+    quickly or too slowly. The curve is "symmetric" in the sense
+    that flipping the curve on $[0,1]$ both vertically and
+    horizontally produces the curve on $[0,1]$.
+\end{itemize}
+My file GeneralSigmoid.gcx can be used to experiment with this
+function in OS X Grapher.
+
+Notes on the parameters:
+\begin{itemize}
+\item Increasing $k$ (e.g. from 2) makes the curve steeper in the
+    center.
+\item Giving $k$ a value between 0 and 1 can make the curve very
+    flat in the center.
+\item The higher $n$ is, the more gently the curve slopes toward
+    -1 and 1.  (This effect depends on the value of $k$.)
+\item Small values of $n$ (\eg less than 1) can create "shelves"
+    along which the curve appears completely flat near -1 and 1.
+    (This violates my original requirements.)
+\end{itemize}
+For a nice paradigmatic sigmoid, use \eg $k=2$ or $k=3$ with
+$n=2$.  For a function that is mostly flat and then rises quickly
+to shelves near -1 and 1, try \eg $k=.01$, $n=.35$.  The latter
+might be used to create a ``success" function that normally
+drifts randomly, but creates a valued or rejected cultvar when
+it reaches an extreme value.
+
+\end{document}
+

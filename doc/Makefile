@@ -1,4 +1,4 @@
-BASE=PopcoTransmission
+BASE=SigmoidNotes
 all: $(BASE).pdf
 
 $(BASE).pdf: $(BASE).tex $(ADDLTEXFILES)
